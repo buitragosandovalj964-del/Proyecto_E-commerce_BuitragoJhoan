@@ -8,91 +8,129 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&family=Playfair+Display:wght@700&display=swap"
         rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="/Proyecto_E-commerce_BuitragoJhoan/css/style.css">
     <style>
+        body {
+            background: #f7efe5;
+            color: #111111;
+        }
+
         .page-hero {
-            padding: 100px 5% 20px;
+            padding: 70px 5% 20px;
             display: grid;
-            grid-template-columns: minmax(0, 1.3fr) minmax(280px, 1fr);
+            grid-template-columns: minmax(0, 1.2fr) minmax(260px, 1fr);
             gap: 32px;
-            align-items: center;
-            max-width: 1200px;
+            align-items: start;
+            max-width: 1040px;
             margin: 0 auto;
+            background: #f7efe5;
         }
 
         .hero-copy {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 14px;
             text-align: left;
         }
 
         .eyebrow {
             display: inline-block;
-            margin-bottom: 18px;
+            margin-bottom: 0;
             text-transform: uppercase;
-            letter-spacing: 0.45em;
-            color: var(--text-muted);
+            letter-spacing: 0.4em;
+            color: #b39f84;
             font-size: 0.78rem;
             font-weight: 700;
         }
 
         .hero-copy h1 {
             font-family: var(--font-urban);
-            font-size: clamp(3.2rem, 5vw, 5.6rem);
-            line-height: 0.9;
-            letter-spacing: 0.05em;
-            margin-bottom: 24px;
-            max-width: 720px;
+            font-size: clamp(2.2rem, 3.2vw, 3.4rem);
+            line-height: 1.08;
+            letter-spacing: 0.08em;
+            margin-bottom: 0;
+            max-width: 520px;
             text-transform: uppercase;
+            color: #111111;
         }
 
         .hero-copy h1 span {
             display: block;
-            font-size: 1.05rem;
-            letter-spacing: 0.35em;
-            color: var(--beige-premium);
+            font-size: 0.95rem;
+            letter-spacing: 0.28em;
+            color: #b39f84;
             text-transform: uppercase;
-            margin-top: 16px;
+            margin-top: 12px;
         }
 
         .hero-copy p {
-            color: var(--text-muted);
-            font-size: 1rem;
-            line-height: 1.9;
-            max-width: 720px;
-            margin-bottom: 34px;
+            color: #4d463f;
+            font-size: 0.98rem;
+            line-height: 1.8;
+            max-width: 620px;
+            margin: 0;
+            opacity: 0.92;
         }
 
         .hero-actions {
-            margin-top: 16px;
+            margin-top: 12px;
             display: flex;
             justify-content: flex-start;
-            gap: 16px;
+            gap: 14px;
             flex-wrap: wrap;
         }
 
         .hero-actions .btn-premium {
-            min-width: 180px;
+            min-width: 160px;
+            background: #111111;
+            color: #f1e6d1;
+            border: 1px solid #111111;
+            padding: 12px 28px;
+            letter-spacing: 0.24em;
+            border-radius: 999px;
+            text-transform: uppercase;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+        }
+
+        .hero-actions .btn-premium:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 14px 28px rgba(0, 0, 0, 0.18);
+            background: #222222;
+        }
+
+        #openCartBtn {
+            background: #111111;
+            color: #f1e6d1;
+            border-color: #111111;
+            letter-spacing: 0.28em;
         }
 
         .search-panel {
-            background: #FFFFFF;
-            border: 1px solid rgba(17, 17, 17, 0.08);
-            box-shadow: 0 24px 60px rgba(17, 17, 17, 0.08);
-            padding: 32px;
-            border-radius: 26px;
+            background: #ffffff;
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            box-shadow: 0 18px 40px rgba(0, 0, 0, 0.05);
+            padding: 26px;
+            border-radius: 28px;
+            width: min(320px, 100%);
+            min-height: auto;
+            align-self: start;
         }
 
         .search-panel h3 {
             font-family: var(--font-urban);
-            font-size: 1rem;
+            font-size: 0.95rem;
             text-transform: uppercase;
             letter-spacing: 0.18em;
-            margin-bottom: 14px;
+            margin-bottom: 12px;
+            color: #111111;
         }
 
         .search-panel p {
-            color: var(--text-muted);
+            color: #5d574f;
             font-size: 0.95rem;
-            line-height: 1.8;
+            line-height: 1.7;
             margin-bottom: 24px;
         }
 
@@ -104,22 +142,34 @@
 
         .search-field input {
             width: 100%;
-            padding: 16px 18px;
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
+            padding: 16px 20px;
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            border-radius: 16px;
             font-family: var(--font-main);
             font-size: 0.95rem;
             outline: none;
-            transition: border-color 0.2s ease;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+            background: #f7f0e6;
+            color: #111111;
+        }
+
+        .search-field input::placeholder {
+            color: #91897f;
+            letter-spacing: 0.05em;
         }
 
         .search-field input:focus {
-            border-color: var(--accent);
+            border-color: #b39f84;
+            box-shadow: 0 0 0 4px rgba(179, 159, 132, 0.12);
         }
 
         .search-field button {
-            padding: 0 24px;
-            border-radius: 12px;
+            padding: 0 28px;
+            border-radius: 16px;
+            min-height: 52px;
+            background: #111111;
+            color: #ffffff;
+            border: none;
         }
 
         .section-title {
@@ -154,6 +204,42 @@
             grid-template-columns: repeat(4, minmax(0, 1fr));
             gap: 28px;
             padding: 0 5% 80px;
+        }
+
+        .categories-filter {
+            display: flex;
+            gap: 12px;
+            padding: 24px 5%;
+            max-width: 1200px;
+            margin: 0 auto;
+            flex-wrap: wrap;
+            justify-content: flex-start;
+        }
+
+        .category-btn {
+            padding: 10px 18px;
+            border: 1px solid #b39f84;
+            background: transparent;
+            color: #111111;
+            font-family: var(--font-urban);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
+        .category-btn:hover {
+            background: rgba(179, 159, 132, 0.08);
+            border-color: #8b7a68;
+        }
+
+        .category-btn.active {
+            background: #111111;
+            color: #f1e6d1;
+            border-color: #111111;
         }
 
         .no-results {
@@ -193,6 +279,10 @@
             .product-grid {
                 grid-template-columns: repeat(2, minmax(0, 1fr));
             }
+
+            .categories-filter {
+                justify-content: center;
+            }
         }
 
         @media(max-width: 640px) {
@@ -207,6 +297,16 @@
             .search-panel {
                 padding: 24px;
             }
+
+            .categories-filter {
+                padding: 16px 4%;
+                gap: 8px;
+            }
+
+            .category-btn {
+                padding: 8px 12px;
+                font-size: 0.75rem;
+            }
         }
     </style>
 </head>
@@ -218,9 +318,9 @@
         <section class="page-hero">
             <div class="hero-copy">
                 <span class="eyebrow">SEBXZ_EXCLUSIVE</span>
-                <h1>SEBXZ EXCLUSIVE <span>Streetwear premium para la ciudad.</span></h1>
-                <p>Descubre el drop de SEBXZ_EXCLUSIVE: prendas premium con carrito inteligente, tallas urbanas y
-                    despacho nacional. Bienvenido a la experiencia de compra de la marca.</p>
+                <h1>Drop urbano premium <span>High-end streetwear & luxury drop // 2026</span></h1>
+                <p>Diseño contemporáneo, entrega nacional y una selección de piezas urbanas con valor de lujo. Compra
+                    con estilo y mantén el mood street-ready.</p>
                 <div class="hero-actions">
                     <button class="btn-premium" id="openCartBtn">Ver Bolsa</button>
                 </div>
@@ -242,34 +342,60 @@
             </div>
         </section>
 
+        <div class="categories-filter">
+            <button class="category-btn active" data-category="Todos">Todos</button>
+            <button class="category-btn" data-category="Gorras">Gorras</button>
+            <button class="category-btn" data-category="Polos">Polos</button>
+            <button class="category-btn" data-category="Camisas Oversize">Camisas Oversize</button>
+            <button class="category-btn" data-category="Buzos">Buzos</button>
+            <button class="category-btn" data-category="Reloj">Reloj</button>
+            <button class="category-btn" data-category="Zapatos">Zapatos</button>
+            <button class="category-btn" data-category="Accesorios">Accesorios</button>
+        </div>
+
         <div id="productGrid" class="product-grid"></div>
     </main>
 
     <product-detail-modal id="detailModal"></product-detail-modal>
     <cart-modal id="cartModal"></cart-modal>
 
-    <script src="js/app.js"></script>
-    <script src="js/components/HeaderComponent.js"></script>
-    <script src="js/components/ProductCard.js"></script>
-    <script src="js/components/ProductDetail.js"></script>
-    <script src="js/components/CartModal.js"></script>
+    <script src="/Proyecto_E-commerce_BuitragoJhoan/js/app.js"></script>
+    <script src="/Proyecto_E-commerce_BuitragoJhoan/js/components/HeaderComponent.js"></script>
+    <script src="/Proyecto_E-commerce_BuitragoJhoan/js/components/ProductCard.js"></script>
+    <script src="/Proyecto_E-commerce_BuitragoJhoan/js/components/ProductDetail.js"></script>
+    <script src="/Proyecto_E-commerce_BuitragoJhoan/js/components/CartModal.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const productGrid = document.getElementById('productGrid');
             const searchInput = document.getElementById('productSearch');
             const searchBtn = document.getElementById('searchBtn');
-            const products = JSON.parse(localStorage.getItem('products')) || (typeof defaultProducts !== 'undefined' ? defaultProducts : []);
+            let currentCategory = 'Todos';
+            let currentSearchQuery = '';
 
             if (!productGrid) return;
 
-            const renderProducts = (query = '') => {
+            const renderProducts = (query = '', category = 'Todos') => {
+                currentSearchQuery = query;
+                currentCategory = category;
+
+                // CORRECCIÓN: Leemos DIRECTAMENTE del localStorage en cada renderizado.
+                const products = JSON.parse(localStorage.getItem('products')) || (typeof defaultProducts !== 'undefined' ? defaultProducts : []);
+
+                let filtered = products;
+
+                // Filtrar por categoría
+                if (category !== 'Todos') {
+                    filtered = filtered.filter(p => p.category === category);
+                }
+
+                // Filtrar por búsqueda
                 const normalized = query.trim().toLowerCase();
-                const filtered = normalized
-                    ? products.filter(product => {
+                if (normalized) {
+                    filtered = filtered.filter(product => {
                         const text = `${product.name} ${product.code} ${product.desc}`.toLowerCase();
                         return text.includes(normalized);
-                    })
-                    : products;
+                    });
+                }
 
                 productGrid.innerHTML = filtered.length ? filtered.map(product => `
                     <product-card
@@ -282,12 +408,23 @@
                 `).join('') : `<div class="no-results">No se encontraron prendas que coincidan con tu búsqueda.</div>`;
             };
 
+            // Carga inicial del catálogo
             renderProducts();
 
-            searchInput.addEventListener('input', () => renderProducts(searchInput.value));
+            // Manejador de botones de categoría
+            const categoryButtons = document.querySelectorAll('.category-btn');
+            categoryButtons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    categoryButtons.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    renderProducts(searchInput.value, btn.dataset.category);
+                });
+            });
+
+            searchInput.addEventListener('input', () => renderProducts(searchInput.value, currentCategory));
             searchBtn.addEventListener('click', (e) => {
                 e.preventDefault();
-                renderProducts(searchInput.value);
+                renderProducts(searchInput.value, currentCategory);
             });
 
             document.getElementById('openCartBtn').addEventListener('click', (e) => {
@@ -300,7 +437,16 @@
                 if (header && typeof header.updateCartCount === 'function') {
                     header.updateCartCount();
                 }
-                renderProducts(searchInput.value);
+            });
+
+            window.addEventListener('productsUpdated', () => {
+                renderProducts(currentSearchQuery, currentCategory);
+            });
+
+            window.addEventListener('storage', (event) => {
+                if (event.key === 'products' || event.key === null) {
+                    renderProducts(currentSearchQuery, currentCategory);
+                }
             });
         });
     </script>

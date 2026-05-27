@@ -1,6 +1,14 @@
 // SEBXZ EXCLUSIVE - OrderManager.js (Letras Blancas de Alta Visibilidad para el Admin)
 class OrderManager extends HTMLElement {
-    connectedCallback() { this.render(); }
+    connectedCallback() {
+        this.render();
+        window.addEventListener('ordersUpdated', () => this.render());
+        window.addEventListener('storage', (event) => {
+            if (event.key === 'orders' || event.key === null) {
+                this.render();
+            }
+        });
+    }
 
     render() {
         const orders = JSON.parse(localStorage.getItem('orders')) || [];
@@ -125,6 +133,8 @@ class OrderManager extends HTMLElement {
             
             <div class="manifest-section-title">Cliente Destinatario</div>
             <p><strong>Nombre:</strong> ${order.customer.name}</p>
+            <p><strong>Identificación:</strong> ${order.customer.document || 'No registrado'}</p>
+            <p><strong>Correo:</strong> ${order.customer.email || 'No registrado'}</p>
             <p><strong>Contacto Directo:</strong> ${order.customer.phone}</p>
             <p><strong>Destino:</strong> ${order.customer.city}</p>
             <p><strong>Dirección Postal:</strong> ${order.customer.address}</p>

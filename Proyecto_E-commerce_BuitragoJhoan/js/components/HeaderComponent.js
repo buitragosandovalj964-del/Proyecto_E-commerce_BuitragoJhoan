@@ -118,6 +118,12 @@ class HeaderLuxe extends HTMLElement {
 
     connectedCallback() {
         this.updateCartCount();
+        window.addEventListener('cartUpdated', () => this.updateCartCount());
+        window.addEventListener('storage', (event) => {
+            if (event.key === 'cart' || event.key === null) {
+                this.updateCartCount();
+            }
+        });
         this.querySelector('#cartTrigger').addEventListener('click', (e) => {
             e.preventDefault();
             document.getElementById('cartModal').openCart();
