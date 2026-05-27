@@ -1,0 +1,153 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700&family=Syne:wght@700;800&display=swap');
+
+:root {
+    --bg-primary: #F4F1EA;     /* Blanco Hueso Orgánico */
+    --bg-secondary: #EAE6DF;   /* Blanco Hueso estructurado para paneles */
+    --bg-card: #FFFFFF;        /* Tarjetas en blanco puro para contraste */
+    --accent: #111111;         /* Negro absoluto para contraste urbano principal */
+    --beige-premium: #C2B4A2;  /* Beige / Arena de alta gama */
+    --text-main: #111111;      /* Texto oscuro de alta legibilidad */
+    --text-muted: #706B63;     /* Tono apagado para códigos y descripciones */
+    --border-color: rgba(194, 180, 162, 0.4); /* Bordes sutiles color arena */
+    
+    /* Tipografías Urbanas */
+    --font-urban: 'Syne', sans-serif;       /* Pesada, tosca, de bloque callejero */
+    --font-main: 'Space Grotesk', sans-serif; /* Estructural y limpia */
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: var(--font-main);
+    color: var(--text-main);
+}
+
+body {
+    background-color: var(--bg-primary);
+    overflow-x: hidden;
+}
+
+/* Scrollbar Urbana */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg-primary); }
+::-webkit-scrollbar-thumb { background: var(--beige-premium); }
+
+/* Botones Premium Estilo Lookbook */
+.btn-premium {
+    background: var(--accent);
+    border: 1px solid var(--accent);
+    color: #FFFFFF;
+    padding: 12px 24px;
+    border-radius: 0px; /* Esquinas completamente rectas de diseño minimalista */
+    font-family: var(--font-urban);
+    font-weight: 800;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 2px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-premium:hover {
+    background: transparent;
+    color: var(--accent);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+}
+
+.btn-danger {
+    background: transparent;
+    border: 1px solid #ef4444;
+    color: #ef4444;
+    padding: 10px 20px;
+    border-radius: 0px;
+    font-family: var(--font-urban);
+    font-weight: 700;
+    cursor: pointer;
+    text-transform: uppercase;
+    font-size: 0.7rem;
+    transition: all 0.3s;
+}
+
+.btn-danger:hover {
+    background: #ef4444;
+    color: #fff;
+}
+
+/* Inputs de Comandos */
+.input-premium {
+    background: #FFFFFF;
+    border: 1px solid var(--border-color);
+    border-radius: 0px;
+    padding: 14px 16px;
+    color: var(--text-main);
+    width: 100%;
+    margin-bottom: 15px;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+.input-premium:focus {
+    border-color: var(--accent);
+}
+
+/* Tarjetas Minimalistas */
+.card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 0px;
+    padding: 20px;
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 30px rgba(194, 180, 162, 0.25);
+}
+
+.card img {
+    width: 100%;
+    height: 360px;
+    object-fit: cover;
+    margin-bottom: 15px;
+}
+
+.card h3 {
+    font-family: var(--font-urban);
+    font-weight: 700;
+    font-size: 1.1rem;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+}
+
+.card .price {
+    color: var(--beige-premium);
+    font-family: var(--font-urban);
+    font-weight: 800;
+    font-size: 1.1rem;
+    margin-bottom: 15px;
+}
+
+/* Controles de Selección de Talla */
+.size-selector {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 15px;
+}
+.size-btn {
+    background: #FFFFFF;
+    border: 1px solid var(--border-color);
+    color: var(--text-main);
+    padding: 5px 12px;
+    font-size: 0.75rem;
+    font-family: var(--font-urban);
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.size-btn.active, .size-btn:hover {
+    background: var(--accent);
+    color: #FFFFFF;
+    border-color: var(--accent);
+}

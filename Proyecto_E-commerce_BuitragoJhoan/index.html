@@ -1,0 +1,127 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EXCLUSIVE GOLDEN | Tienda</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .store-hero {
+            padding: 80px 5% 40px;
+            text-align: center;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        .store-hero h1 {
+            font-family: var(--font-urban);
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            line-height: 1.04;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 18px;
+        }
+        .store-hero span {
+            color: var(--beige-premium);
+        }
+        .store-hero p {
+            color: var(--text-muted);
+            font-size: 1rem;
+            line-height: 1.85;
+            max-width: 720px;
+            margin: 0 auto;
+        }
+        .hero-actions {
+            margin-top: 32px;
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+        .section-title {
+            padding: 10px 5%;
+            margin-top: 40px;
+            text-align: center;
+        }
+        .section-title h2 {
+            font-family: var(--font-urban);
+            font-size: 1.6rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+        .section-title p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            max-width: 740px;
+            margin: 0 auto;
+        }
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            padding: 0 5% 60px;
+        }
+    </style>
+</head>
+<body>
+    <header-luxe></header-luxe>
+
+    <main>
+        <section class="store-hero">
+            <h1>EXCLUSIVE GOLDEN<br><span>Streetwear premium para la ciudad.</span></h1>
+            <p>Descubre el seleccionado más exclusivo de piezas de diseñador, con carrito inteligente y despacho nacional. Bienvenido a la experiencia de compra premium.</p>
+            <div class="hero-actions">
+                <a href="admin.html" class="btn-premium">Panel Admin</a>
+                <button class="btn-premium" id="openCartBtn">Ver Bolsa</button>
+            </div>
+        </section>
+
+        <section class="section-title">
+            <h2>Drop Actual</h2>
+            <p>Productos disponibles, selecciona talla cuando corresponda y añade directo a tu bolsa.</p>
+        </section>
+
+        <div id="productGrid" class="product-grid"></div>
+    </main>
+
+    <product-detail-modal id="detailModal"></product-detail-modal>
+    <cart-modal id="cartModal"></cart-modal>
+
+    <script src="js/app.js"></script>
+    <script src="js/components/HeaderComponent.js"></script>
+    <script src="js/components/ProductCard.js"></script>
+    <script src="js/components/ProductDetail.js"></script>
+    <script src="js/components/CartModal.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const productGrid = document.getElementById('productGrid');
+            const products = JSON.parse(localStorage.getItem('products')) || (typeof defaultProducts !== 'undefined' ? defaultProducts : []);
+
+            if (!productGrid) return;
+
+            productGrid.innerHTML = products.map(product => `
+                <product-card
+                    id="${product.id}"
+                    name="${product.name}"
+                    price="${product.price}"
+                    img="${product.img}"
+                    has-sizes="${product.hasSizes}"
+                ></product-card>
+            `).join('');
+
+            document.getElementById('openCartBtn').addEventListener('click', (e) => {
+                e.preventDefault();
+                document.getElementById('cartModal').openCart();
+            });
+
+            window.addEventListener('cartUpdated', () => {
+                const header = document.querySelector('header-luxe');
+                if (header && typeof header.updateCartCount === 'function') {
+                    header.updateCartCount();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
