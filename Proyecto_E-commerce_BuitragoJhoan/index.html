@@ -1,85 +1,245 @@
 ﻿<!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EXCLUSIVE GOLDEN | Tienda</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <title>SEBXZ_EXCLUSIVE | Tienda</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&family=Playfair+Display:wght@700&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
     <style>
-        .store-hero {
-            padding: 80px 5% 40px;
-            text-align: center;
-            max-width: 1000px;
+        .page-hero {
+            padding: 100px 5% 20px;
+            display: grid;
+            grid-template-columns: minmax(0, 1.3fr) minmax(280px, 1fr);
+            gap: 32px;
+            align-items: center;
+            max-width: 1200px;
             margin: 0 auto;
         }
-        .store-hero h1 {
-            font-family: var(--font-urban);
-            font-size: clamp(2.5rem, 5vw, 4rem);
-            line-height: 1.04;
-            letter-spacing: 2px;
-            text-transform: uppercase;
+
+        .hero-copy {
+            text-align: left;
+        }
+
+        .eyebrow {
+            display: inline-block;
             margin-bottom: 18px;
+            text-transform: uppercase;
+            letter-spacing: 0.45em;
+            color: var(--text-muted);
+            font-size: 0.78rem;
+            font-weight: 700;
         }
-        .store-hero span {
+
+        .hero-copy h1 {
+            font-family: var(--font-urban);
+            font-size: clamp(3.2rem, 5vw, 5.6rem);
+            line-height: 0.9;
+            letter-spacing: 0.05em;
+            margin-bottom: 24px;
+            max-width: 720px;
+            text-transform: uppercase;
+        }
+
+        .hero-copy h1 span {
+            display: block;
+            font-size: 1.05rem;
+            letter-spacing: 0.35em;
             color: var(--beige-premium);
+            text-transform: uppercase;
+            margin-top: 16px;
         }
-        .store-hero p {
+
+        .hero-copy p {
             color: var(--text-muted);
             font-size: 1rem;
-            line-height: 1.85;
+            line-height: 1.9;
             max-width: 720px;
-            margin: 0 auto;
+            margin-bottom: 34px;
         }
+
         .hero-actions {
-            margin-top: 32px;
+            margin-top: 16px;
             display: flex;
-            justify-content: center;
+            justify-content: flex-start;
             gap: 16px;
             flex-wrap: wrap;
         }
-        .section-title {
-            padding: 10px 5%;
-            margin-top: 40px;
-            text-align: center;
+
+        .hero-actions .btn-premium {
+            min-width: 180px;
         }
+
+        .search-panel {
+            background: #FFFFFF;
+            border: 1px solid rgba(17, 17, 17, 0.08);
+            box-shadow: 0 24px 60px rgba(17, 17, 17, 0.08);
+            padding: 32px;
+            border-radius: 26px;
+        }
+
+        .search-panel h3 {
+            font-family: var(--font-urban);
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.18em;
+            margin-bottom: 14px;
+        }
+
+        .search-panel p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            line-height: 1.8;
+            margin-bottom: 24px;
+        }
+
+        .search-field {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 12px;
+        }
+
+        .search-field input {
+            width: 100%;
+            padding: 16px 18px;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            font-family: var(--font-main);
+            font-size: 0.95rem;
+            outline: none;
+            transition: border-color 0.2s ease;
+        }
+
+        .search-field input:focus {
+            border-color: var(--accent);
+        }
+
+        .search-field button {
+            padding: 0 24px;
+            border-radius: 12px;
+        }
+
+        .section-title {
+            margin: 0 auto 24px;
+            padding: 0 5%;
+            max-width: 1200px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            gap: 24px;
+        }
+
+        .section-title div:first-child {
+            max-width: 720px;
+        }
+
         .section-title h2 {
             font-family: var(--font-urban);
-            font-size: 1.6rem;
-            letter-spacing: 2px;
+            font-size: 1.4rem;
+            letter-spacing: 0.24em;
             text-transform: uppercase;
             margin-bottom: 10px;
         }
+
         .section-title p {
             color: var(--text-muted);
             font-size: 0.95rem;
-            max-width: 740px;
-            margin: 0 auto;
         }
+
         .product-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 24px;
-            padding: 0 5% 60px;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 28px;
+            padding: 0 5% 80px;
+        }
+
+        .no-results {
+            grid-column: 1 / -1;
+            padding: 60px 20px;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        @media(max-width: 1080px) {
+            .product-grid {
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+            }
+        }
+
+        @media(max-width: 880px) {
+            .page-hero {
+                grid-template-columns: 1fr;
+                gap: 24px;
+                padding-top: 80px;
+            }
+
+            .hero-copy {
+                text-align: center;
+            }
+
+            .hero-actions {
+                justify-content: center;
+            }
+
+            .section-title {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .product-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
+        @media(max-width: 640px) {
+            .section-title {
+                padding: 0 4%;
+            }
+
+            .product-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .search-panel {
+                padding: 24px;
+            }
         }
     </style>
 </head>
+
 <body>
     <header-luxe></header-luxe>
 
     <main>
-        <section class="store-hero">
-            <h1>EXCLUSIVE GOLDEN<br><span>Streetwear premium para la ciudad.</span></h1>
-            <p>Descubre el seleccionado más exclusivo de piezas de diseñador, con carrito inteligente y despacho nacional. Bienvenido a la experiencia de compra premium.</p>
-            <div class="hero-actions">
-                <a href="admin.html" class="btn-premium">Panel Admin</a>
-                <button class="btn-premium" id="openCartBtn">Ver Bolsa</button>
+        <section class="page-hero">
+            <div class="hero-copy">
+                <span class="eyebrow">SEBXZ_EXCLUSIVE</span>
+                <h1>SEBXZ EXCLUSIVE <span>Streetwear premium para la ciudad.</span></h1>
+                <p>Descubre el drop de SEBXZ_EXCLUSIVE: prendas premium con carrito inteligente, tallas urbanas y
+                    despacho nacional. Bienvenido a la experiencia de compra de la marca.</p>
+                <div class="hero-actions">
+                    <button class="btn-premium" id="openCartBtn">Ver Bolsa</button>
+                </div>
+            </div>
+            <div class="search-panel">
+                <h3>Buscar pieza en el drop</h3>
+                <p>Filtra por nombre, código o descripción y encuentra tu prenda sin perder el ritmo.</p>
+                <div class="search-field">
+                    <input id="productSearch" type="search" placeholder="Buscar pieza en el drop...">
+                    <button class="btn-premium" id="searchBtn">Buscar</button>
+                </div>
             </div>
         </section>
 
         <section class="section-title">
-            <h2>Drop Actual</h2>
-            <p>Productos disponibles, selecciona talla cuando corresponda y añade directo a tu bolsa.</p>
+            <div>
+                <h2>Drop Actual</h2>
+                <p>Productos disponibles, selecciona talla cuando corresponda y añade directo a tu bolsa.</p>
+            </div>
         </section>
 
         <div id="productGrid" class="product-grid"></div>
@@ -96,19 +256,39 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const productGrid = document.getElementById('productGrid');
+            const searchInput = document.getElementById('productSearch');
+            const searchBtn = document.getElementById('searchBtn');
             const products = JSON.parse(localStorage.getItem('products')) || (typeof defaultProducts !== 'undefined' ? defaultProducts : []);
 
             if (!productGrid) return;
 
-            productGrid.innerHTML = products.map(product => `
-                <product-card
-                    id="${product.id}"
-                    name="${product.name}"
-                    price="${product.price}"
-                    img="${product.img}"
-                    has-sizes="${product.hasSizes}"
-                ></product-card>
-            `).join('');
+            const renderProducts = (query = '') => {
+                const normalized = query.trim().toLowerCase();
+                const filtered = normalized
+                    ? products.filter(product => {
+                        const text = `${product.name} ${product.code} ${product.desc}`.toLowerCase();
+                        return text.includes(normalized);
+                    })
+                    : products;
+
+                productGrid.innerHTML = filtered.length ? filtered.map(product => `
+                    <product-card
+                        id="${product.id}"
+                        name="${product.name}"
+                        price="${product.price}"
+                        img="${product.img}"
+                        has-sizes="${product.hasSizes}"
+                    ></product-card>
+                `).join('') : `<div class="no-results">No se encontraron prendas que coincidan con tu búsqueda.</div>`;
+            };
+
+            renderProducts();
+
+            searchInput.addEventListener('input', () => renderProducts(searchInput.value));
+            searchBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                renderProducts(searchInput.value);
+            });
 
             document.getElementById('openCartBtn').addEventListener('click', (e) => {
                 e.preventDefault();
@@ -120,8 +300,10 @@
                 if (header && typeof header.updateCartCount === 'function') {
                     header.updateCartCount();
                 }
+                renderProducts(searchInput.value);
             });
         });
     </script>
 </body>
+
 </html>

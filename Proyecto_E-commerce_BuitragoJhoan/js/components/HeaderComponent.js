@@ -4,27 +4,13 @@ class HeaderLuxe extends HTMLElement {
         super();
         this.innerHTML = `
             <style>
-                /* Barra de anuncios superior con tipografía limpia */
-                .top-bar {
-                    background: var(--accent); /* Negro Absoluto */
-                    color: #FFFFFF;
-                    text-align: center;
-                    padding: 8px;
-                    font-family: var(--font-main);
-                    font-size: 0.75rem;
-                    font-weight: 500;
-                    letter-spacing: 2px;
-                    text-transform: uppercase;
-                }
-
-                /* Contenedor de navegación minimalista premium */
                 .nav-luxe {
                     display: flex;
                     justify-content: space-between;
                     align-items: center;
-                    padding: 20px 5%;
-                    background: #FFFFFF; /* Fondo blanco para contraste total con el hueso */
-                    border-bottom: 1px solid rgba(194, 180, 162, 0.4);
+                    padding: 24px 5%;
+                    background: var(--bg-primary);
+                    border-bottom: 1px solid rgba(17,17,17,0.08);
                     position: sticky;
                     top: 0;
                     z-index: 999;
@@ -68,19 +54,19 @@ class HeaderLuxe extends HTMLElement {
                    BLOQUE MAXIMIZADO DEL CARRITO (STREETWEAR TAG DESIGN)
                    ========================================================= */
                 .cart-link {
-                    display: flex;
+                    display: inline-flex;
                     align-items: center;
                     gap: 12px;
                     font-family: var(--font-urban) !important;
-                    font-size: 1.15rem !important; /* Texto notablemente más grande */
-                    font-weight: 800;
-                    color: var(--text-main) !important;
+                    font-size: 0.95rem !important;
+                    font-weight: 700;
+                    color: #FFFFFF !important;
                     text-decoration: none;
                     letter-spacing: 1.5px;
-                    padding: 10px 20px;
-                    border: 2px solid var(--accent); /* Recuadro pesado para que resalte */
-                    background: transparent;
-                    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+                    padding: 12px 22px;
+                    border: 1px solid var(--accent);
+                    background: var(--accent);
+                    transition: all 0.3s ease;
                 }
                 
                 /* El ícono emoji escalado de forma independiente */
@@ -106,12 +92,8 @@ class HeaderLuxe extends HTMLElement {
 
                 /* Efecto de inversión urbana al pasar el mouse */
                 .cart-link:hover {
-                    background: var(--accent);
-                    color: #FFFFFF !important;
-                }
-                
-                .cart-link:hover .cart-icon {
-                    transform: scale(1.1) rotate(-5deg);
+                    background: transparent;
+                    color: var(--accent) !important;
                 }
                 
                 .cart-link:hover .cart-badge {
@@ -120,7 +102,6 @@ class HeaderLuxe extends HTMLElement {
                 }
             </style>
 
-            <div class="top-bar">[ PROTOCOLO DE DESPACHO INMEDIATO ACTIVADO // ENVÍOS NACIONALES ]</div>
             <nav class="nav-luxe">
                 <a href="index.html" class="logo">SEBXZ<span>_EXCLUSIVE</span></a>
                 <div class="nav-links">

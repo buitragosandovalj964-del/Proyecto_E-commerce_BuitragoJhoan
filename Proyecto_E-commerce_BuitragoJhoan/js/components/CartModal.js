@@ -133,6 +133,24 @@ class CartModal extends HTMLElement {
                 .item-details { flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
                 .item-details h4 { font-family: var(--font-cyber); color: #FFFFFF; font-size: 0.9rem; }
                 .item-meta { font-size: 0.75rem; color: #4b5563; }
+                .cart-quantity {
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;
+                    margin-top: 12px;
+                }
+                .qty-btn {
+                    width: 30px;
+                    height: 30px;
+                    border: 1px solid rgba(255,255,255,0.12);
+                    background: transparent;
+                    color: #FFFFFF;
+                    font-size: 1rem;
+                    cursor: pointer;
+                    transition: background 0.2s ease;
+                }
+                .qty-btn:hover { background: rgba(255,255,255,0.08); }
+                .qty-btn:disabled { opacity: 0.35; cursor: not-allowed; }
                 .item-price { color: var(--accent); font-weight: 700; font-size: 0.9rem; }
                 .cart-footer { border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; }
                 .total-box {
@@ -206,9 +224,13 @@ class CartModal extends HTMLElement {
                                     <div>
                                         <h4>${item.name}</h4>
                                         <div class="item-meta">TALLA: <strong>${item.size || 'Única'}</strong></div>
+                                        <div class="cart-quantity">
+                                            <button type="button" class="qty-btn" data-action="decrease" data-id="${item.id}" data-size="${item.size || 'Única'}">−</button>
+                                            <span style="color:#FFFFFF; font-size:0.95rem; font-weight:700;">${item.quantity}</span>
+                                            <button type="button" class="qty-btn" data-action="increase" data-id="${item.id}" data-size="${item.size || 'Única'}">+</button>
+                                        </div>
                                     </div>
                                     <div style="display:flex; justify-content:space-between; align-items:center;">
-                                        <span style="color:#FFF; font-size:0.85rem;">Cant: ${item.quantity}</span>
                                         <div class="item-price">$${(item.price * item.quantity).toLocaleString()} COP</div>
                                     </div>
                                 </div>
@@ -258,6 +280,15 @@ class CartModal extends HTMLElement {
         if (checkoutBtn && cart.length > 0) {
             checkoutBtn.addEventListener('click', () => this.openCheckoutForm());
         }
+
+        this.querySelectorAll('.qty-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const action = btn.dataset.action;
+                const productId = btn.dataset.id;
+                const productSize = btn.dataset.size || 'Única';
+                changeQuantity(productId, productSize, action === 'increase' ? 1 : -1);
+            });
+        });
         this.querySelector('#cancelFormBtn').addEventListener('click', () => {
             this.closeCheckoutForm();
             this.openCart();
