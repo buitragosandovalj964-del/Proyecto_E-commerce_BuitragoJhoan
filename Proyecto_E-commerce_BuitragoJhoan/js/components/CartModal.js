@@ -1,5 +1,4 @@
-// SEBXZ EXCLUSIVE - Componente de Bolsa Desplegable con Cuestionario y Alerta de Éxito
-class CartModal extends HTMLElement {
+﻿class CartModal extends HTMLElement {
     constructor() {
         super();
         this.isOpen = false;
@@ -28,118 +27,267 @@ class CartModal extends HTMLElement {
         this.innerHTML = `
             <style>
                 .cart-overlay {
-                    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-                    background: rgba(0, 0, 0, 0.4); backdrop-filter: blur(4px);
-                    z-index: 1000; display: none; justify-content: flex-end;
+                    position: fixed;
+                    inset: 0;
+                    background: rgba(17, 17, 17, 0.45);
+                    backdrop-filter: blur(12px);
+                    z-index: 2000;
+                    display: none;
+                    justify-content: flex-end;
                 }
                 .cart-sidebar {
-                    width: 100%; max-width: 450px; height: 100%; background: #0D0D0F;
-                    box-shadow: -10px 0 40px rgba(0,0,0,0.5); display: flex; flex-direction: column; padding: 30px;
+                    width: 100%;
+                    max-width: 460px;
+                    height: 100%;
+                    background: #F7EFE5;
+                    box-shadow: -12px 0 50px rgba(0, 0, 0, 0.12);
+                    display: flex;
+                    flex-direction: column;
+                    padding: 32px;
                 }
                 .btn-back-store {
-                    display: inline-flex; align-items: center; gap: 12px; background: transparent;
-                    border: none; color: #EAE6DF; font-family: var(--font-cyber); font-size: 0.85rem;
-                    font-weight: 800; text-transform: uppercase; letter-spacing: 2px; cursor: pointer;
-                    margin-bottom: 40px; transition: all 0.3s;
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 10px;
+                    color: #111111;
+                    background: transparent;
+                    border: none;
+                    font-family: var(--font-urban);
+                    font-size: 0.82rem;
+                    letter-spacing: 0.16em;
+                    text-transform: uppercase;
+                    cursor: pointer;
+                    margin-bottom: 24px;
                 }
-                .btn-back-store:hover { color: var(--accent); transform: translateX(-6px); }
+                .btn-back-store:hover {
+                    color: var(--beige-premium);
+                }
                 .cart-title {
-                    font-family: var(--font-cyber); color: #FFFFFF; font-size: 1.1rem;
-                    text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 20px;
-                    border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px;
+                    font-family: var(--font-urban);
+                    font-size: 1rem;
+                    letter-spacing: 0.22em;
+                    text-transform: uppercase;
+                    margin-bottom: 14px;
+                    color: #111111;
                 }
-                .cart-items-container { flex: 1; overflow-y: auto; margin-bottom: 20px; }
+                .cart-items-container {
+                    flex: 1;
+                    overflow-y: auto;
+                    padding-right: 6px;
+                    margin-bottom: 20px;
+                }
                 .cart-item {
-                    display: flex; gap: 15px; background: rgba(255, 255, 255, 0.03);
-                    padding: 15px; margin-bottom: 15px; border: 1px solid rgba(255,255,255,0.05);
+                    display: flex;
+                    gap: 16px;
+                    background: #FFFFFF;
+                    border: 1px solid rgba(17, 17, 17, 0.08);
+                    padding: 18px;
+                    border-radius: 20px;
+                    margin-bottom: 16px;
                 }
-                .cart-item img { width: 70px; height: 90px; object-fit: cover; }
-                .item-details { flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
-                .item-details h4 { font-family: var(--font-cyber); color: #FFFFFF; font-size: 0.9rem; }
-                .item-meta { font-size: 0.75rem; color: #4b5563; }
+                .cart-item img {
+                    width: 82px;
+                    height: 88px;
+                    object-fit: cover;
+                    border-radius: 16px;
+                }
+                .item-details {
+                    flex: 1;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: space-between;
+                }
+                .item-details h4 {
+                    font-family: var(--font-urban);
+                    font-size: 0.95rem;
+                    margin-bottom: 6px;
+                    color: #111111;
+                }
+                .item-meta {
+                    color: #706B63;
+                    font-size: 0.78rem;
+                    margin-bottom: 10px;
+                }
                 .cart-quantity {
                     display: flex;
                     align-items: center;
-                    gap: 8px;
-                    margin-top: 12px;
+                    gap: 10px;
+                    margin-bottom: 10px;
                 }
                 .qty-btn {
-                    width: 30px;
-                    height: 30px;
-                    border: 1px solid rgba(255,255,255,0.12);
-                    background: transparent;
-                    color: #FFFFFF;
+                    width: 34px;
+                    height: 34px;
+                    border: 1px solid rgba(17, 17, 17, 0.12);
+                    background: #FFFFFF;
+                    color: #111111;
                     font-size: 1rem;
                     cursor: pointer;
                     transition: background 0.2s ease;
                 }
-                .qty-btn:hover { background: rgba(255,255,255,0.08); }
-                .qty-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+                .qty-btn:hover {
+                    background: rgba(17, 17, 17, 0.05);
+                }
                 .delete-item-btn {
-                    margin-top: 14px;
-                    align-self: flex-start;
-                    padding: 6px 10px;
-                    border: 1px solid rgba(255,255,255,0.15);
+                    padding: 8px 12px;
+                    border: 1px solid rgba(17, 17, 17, 0.18);
                     background: transparent;
-                    color: #fbbf24;
-                    font-size: 0.8rem;
+                    color: #111111;
+                    font-size: 0.78rem;
                     text-transform: uppercase;
-                    letter-spacing: 0.08em;
+                    letter-spacing: 0.12em;
                     cursor: pointer;
-                    transition: background 0.2s ease, border-color 0.2s ease;
+                    border-radius: 4px;
+                    width: fit-content;
                 }
-                .delete-item-btn:hover { background: rgba(251,191,36,0.08); border-color: rgba(251,191,36,0.4); }
-                .item-price { color: var(--accent); font-weight: 700; font-size: 0.9rem; }
-                .cart-footer { border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; }
+                .delete-item-btn:hover {
+                    background: rgba(17, 17, 17, 0.05);
+                }
+                .item-price {
+                    color: var(--accent);
+                    font-weight: 900;
+                    font-size: 0.95rem;
+                }
+                .cart-footer {
+                    border-top: 1px solid rgba(17, 17, 17, 0.12);
+                    padding-top: 24px;
+                }
                 .total-box {
-                    display: flex; justify-content: space-between; font-family: var(--font-cyber);
-                    color: #FFF; font-size: 1.1rem; font-weight: 800; margin-bottom: 20px;
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    font-family: var(--font-urban);
+                    font-size: 1rem;
+                    font-weight: 800;
+                    color: #111111;
+                    margin-bottom: 18px;
                 }
-                .total-box span { color: var(--accent); }
+                .total-box span {
+                    color: var(--accent);
+                }
                 .form-overlay {
-                    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-                    background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(6px);
-                    z-index: 2000; display: none; justify-content: center; align-items: center; padding: 20px;
+                    position: fixed;
+                    inset: 0;
+                    background: rgba(17, 17, 17, 0.45);
+                    backdrop-filter: blur(12px);
+                    z-index: 2400;
+                    display: none;
+                    justify-content: center;
+                    align-items: center;
+                    padding: 20px;
                 }
                 .form-container {
-                    background: #0D0D0F; border: 1px solid var(--border-color);
-                    width: 100%; max-width: 500px; padding: 35px; box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+                    width: min(560px, 100%);
+                    background: #FFFFFF;
+                    border: 1px solid rgba(17, 17, 17, 0.12);
+                    box-shadow: 0 35px 70px rgba(0, 0, 0, 0.08);
+                    padding: 32px;
+                    border-radius: 24px;
                 }
                 .form-header {
-                    font-family: var(--font-cyber); color: #FFFFFF; font-size: 1.2rem;
-                    text-transform: uppercase; letter-spacing: 2px; margin-bottom: 25px;
-                    border-bottom: 1px solid var(--accent); padding-bottom: 12px; text-align: center;
+                    margin-bottom: 24px;
+                    font-family: var(--font-urban);
+                    font-size: 1.15rem;
+                    letter-spacing: 0.18em;
+                    text-transform: uppercase;
+                    color: #111111;
                 }
-                .form-group { display: flex; flex-direction: column; gap: 8px; margin-bottom: 18px; }
-                .form-group label { font-family: var(--font-cyber); color: #4b5563; font-size: 0.75rem; text-transform: uppercase; }
+                .form-group {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 8px;
+                    margin-bottom: 18px;
+                }
+                .form-group label {
+                    color: #706B63;
+                    font-size: 0.77rem;
+                    letter-spacing: 0.1em;
+                    text-transform: uppercase;
+                }
                 .form-group input {
-                    background: #000; border: 1px solid var(--border-color); padding: 12px;
-                    color: #FFFFFF; font-size: 0.85rem; outline: none;
+                    background: #F7EFE5;
+                    border: 1px solid rgba(17, 17, 17, 0.12);
+                    padding: 14px 16px;
+                    border-radius: 8px;
+                    color: #111111;
+                    font-size: 0.95rem;
                 }
-                .form-group input:focus { border-color: var(--accent); box-shadow: var(--cyber-glow); }
-                .form-actions { display: flex; gap: 15px; margin-top: 30px; }
+                .form-group input:focus {
+                    outline: 2px solid rgba(17, 17, 17, 0.12);
+                }
+                .form-actions {
+                    display: flex;
+                    gap: 14px;
+                    flex-wrap: wrap;
+                    margin-top: 22px;
+                }
                 .success-overlay {
-                    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-                    background: rgba(5, 5, 8, 0.9); backdrop-filter: blur(8px);
-                    z-index: 3000; display: none; justify-content: center; align-items: center; padding: 20px;
+                    position: fixed;
+                    inset: 0;
+                    background: rgba(17, 17, 17, 0.65);
+                    backdrop-filter: blur(16px);
+                    z-index: 2600;
+                    display: none;
+                    justify-content: center;
+                    align-items: center;
+                    padding: 20px;
                 }
                 .success-card {
-                    background: #0D0E15; border: 2px solid var(--accent); padding: 40px;
-                    width: 100%; max-width: 420px; text-align: center; box-shadow: var(--cyber-glow-intense);
+                    width: min(500px, 100%);
+                    background: #F7EFE5;
+                    border: 1px solid rgba(17, 17, 17, 0.12);
+                    padding: 36px;
+                    border-radius: 24px;
+                    text-align: center;
+                    box-shadow: 0 35px 80px rgba(0, 0, 0, 0.12);
                 }
                 .success-icon {
-                    width: 70px; height: 70px; background: rgba(0, 240, 255, 0.1);
-                    border: 2px solid var(--accent); color: var(--accent); border-radius: 50%;
-                    display: flex; align-items: center; justify-content: center;
-                    font-size: 2.2rem; margin: 0 auto 20px auto;
-                    box-shadow: var(--cyber-glow);
+                    width: 72px;
+                    height: 72px;
+                    border-radius: 50%;
+                    background: rgba(17, 17, 17, 0.08);
+                    color: var(--accent);
+                    display: grid;
+                    place-items: center;
+                    margin: 0 auto 22px;
+                    font-size: 2rem;
                 }
                 .success-title {
-                    font-family: var(--font-cyber); color: #FFF; font-size: 1.3rem;
-                    text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px;
+                    font-family: var(--font-urban);
+                    font-size: 1.2rem;
+                    margin-bottom: 12px;
+                    color: #111111;
+                    letter-spacing: 0.16em;
+                    text-transform: uppercase;
                 }
-                .success-msg { color: #4b5563; font-size: 0.85rem; margin-bottom: 25px; line-height: 1.5; }
-                .success-msg strong { color: #FFF; font-family: monospace; }
+                .success-msg {
+                    color: #4F493F;
+                    font-size: 0.92rem;
+                    line-height: 1.7;
+                    margin-bottom: 24px;
+                }
+                .success-msg strong {
+                    color: #111111;
+                }
+                @media(max-width: 680px) {
+                    .cart-sidebar {
+                        max-width: 100%;
+                        padding: 24px;
+                    }
+                    .cart-item {
+                        flex-direction: column;
+                        align-items: center;
+                        text-align: center;
+                    }
+                    .cart-item img {
+                        margin-bottom: 12px;
+                    }
+                    .item-details {
+                        align-items: center;
+                    }
+                    .form-actions {
+                        flex-direction: column;
+                    }
+                }
             </style>
 
             <div class="cart-overlay" id="modalOverlay">
@@ -148,7 +296,7 @@ class CartModal extends HTMLElement {
                     <div class="cart-title">[ Tu Bolsa de Compra ]</div>
                     <div class="cart-items-container" id="cartItemsContainer"></div>
                     <div class="cart-footer">
-                        <div class="total-box"><div>TOTAL:</div><span id="cartTotalAmount">$0 COP</span></div>
+                        <div class="total-box"><span>Total:</span><span id="cartTotalAmount">$0 COP</span></div>
                         <button class="btn-premium" id="checkoutBtn" style="width:100%;">Proceder al Pago</button>
                     </div>
                 </div>
@@ -158,12 +306,12 @@ class CartModal extends HTMLElement {
                 <div class="form-container">
                     <div class="form-header">[ Datos de Despacho ]</div>
                     <form id="orderForm">
-                        <div class="form-group"><label>Identificación *</label><input type="text" id="clientDocument" required placeholder="Ej. CC 123456789"></div>
-                        <div class="form-group"><label>Correo Electrónico *</label><input type="email" id="clientEmail" required placeholder="Ej. cliente@mail.com"></div>
-                        <div class="form-group"><label>Nombre Completo *</label><input type="text" id="clientName" required placeholder="Ej. Jhoan Sebastián"></div>
-                        <div class="form-group"><label>Teléfono / WhatsApp *</label><input type="tel" id="clientPhone" required placeholder="Ej. 3123456789"></div>
-                        <div class="form-group"><label>Ciudad Destino *</label><input type="text" id="clientCity" required placeholder="Ej. Bucaramanga"></div>
-                        <div class="form-group"><label>Dirección Completa *</label><input type="text" id="clientAddress" required placeholder="Ej. Calle 36 #24-10"></div>
+                        <div class="form-group"><label for="clientDocument">Identificación *</label><input type="text" id="clientDocument" required placeholder="Ej. CC 123456789"></div>
+                        <div class="form-group"><label for="clientEmail">Correo Electrónico *</label><input type="email" id="clientEmail" required placeholder="Ej. cliente@mail.com"></div>
+                        <div class="form-group"><label for="clientName">Nombre Completo *</label><input type="text" id="clientName" required placeholder="Ej. Jhoan Sebastián"></div>
+                        <div class="form-group"><label for="clientPhone">Teléfono / WhatsApp *</label><input type="tel" id="clientPhone" required placeholder="Ej. 3123456789"></div>
+                        <div class="form-group"><label for="clientCity">Ciudad Destino *</label><input type="text" id="clientCity" required placeholder="Ej. Bucaramanga"></div>
+                        <div class="form-group"><label for="clientAddress">Dirección Completa *</label><input type="text" id="clientAddress" required placeholder="Ej. Calle 36 #24-10"></div>
                         <div class="form-actions">
                             <button type="button" class="btn-danger" id="cancelFormBtn" style="flex:1;">Cancelar</button>
                             <button type="submit" class="btn-premium" style="flex:2;">Confirmar Pedido</button>
@@ -310,6 +458,7 @@ class CartModal extends HTMLElement {
 
         const newOrder = {
             orderId: generatedId,
+            timestamp: Date.now(),
             date: new Date().toLocaleDateString(),
             customer: {
                 document: documentId,
@@ -344,7 +493,7 @@ class CartModal extends HTMLElement {
         if (this.cartItemsContainer) {
             if (cart.length === 0) {
                 this.cartItemsContainer.innerHTML = `
-                    <p style="text-align:center; color:#4b5563; font-family:var(--font-cyber); font-size:0.8rem; margin-top:40px;">[ BOLSA_VACÍA ]</p>
+                    <p style="text-align:center; color:#706B63; font-family:var(--font-main); font-size:0.9rem; margin-top:40px;">[ BOLSA_VACÍA ]</p>
                 `;
             } else {
                 this.cartItemsContainer.innerHTML = cart.map(item => `
@@ -353,16 +502,16 @@ class CartModal extends HTMLElement {
                         <div class="item-details">
                             <div>
                                 <h4>${item.name}</h4>
-                                <div class="item-meta">TALLA: <strong>${item.size || 'Única'}</strong></div>
+                                <div class="item-meta">Talla: <strong>${item.size || 'Única'}</strong></div>
                                 <div class="cart-quantity">
                                     <button type="button" class="qty-btn" data-action="decrease" data-id="${item.id}" data-size="${item.size || 'Única'}">−</button>
-                                    <span style="color:#FFFFFF; font-size:0.95rem; font-weight:700;">${item.quantity}</span>
+                                    <span style="color:#111111; font-size:0.95rem; font-weight:700;">${item.quantity}</span>
                                     <button type="button" class="qty-btn" data-action="increase" data-id="${item.id}" data-size="${item.size || 'Única'}">+</button>
                                 </div>
-                                <button type="button" class="delete-item-btn" data-id="${item.id}" data-size="${item.size || 'Única'}">Eliminar</button>
                             </div>
-                            <div style="display:flex; justify-content:space-between; align-items:center;">
+                            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
                                 <div class="item-price">$${(item.price * item.quantity).toLocaleString()} COP</div>
+                                <button type="button" class="delete-item-btn" data-id="${item.id}" data-size="${item.size || 'Única'}">Eliminar</button>
                             </div>
                         </div>
                     </div>
@@ -376,13 +525,8 @@ class CartModal extends HTMLElement {
 
         if (this.checkoutBtn) {
             this.checkoutBtn.disabled = cart.length === 0;
-            if (cart.length === 0) {
-                this.checkoutBtn.style.opacity = '0.3';
-                this.checkoutBtn.style.cursor = 'not-allowed';
-            } else {
-                this.checkoutBtn.style.opacity = '1';
-                this.checkoutBtn.style.cursor = 'pointer';
-            }
+            this.checkoutBtn.style.opacity = cart.length === 0 ? '0.35' : '1';
+            this.checkoutBtn.style.cursor = cart.length === 0 ? 'not-allowed' : 'pointer';
         }
     }
 }

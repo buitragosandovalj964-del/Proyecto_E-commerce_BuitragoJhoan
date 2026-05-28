@@ -1,184 +1,230 @@
-class ProductManager extends HTMLElement {
+﻿class ProductManager extends HTMLElement {
     get STORE_KEY() { return 'products'; }
 
     connectedCallback() {
         this.render();
         window.addEventListener('productsUpdated', () => this.render());
+        window.addEventListener('categoriesUpdated', () => this.render());
         window.addEventListener('storage', (event) => {
-            if (event.key === 'products' || event.key === null) {
+            if (event.key === 'products' || event.key === 'categories' || event.key === null) {
                 this.render();
             }
         });
     }
 
+    getCategories() {
+        if (typeof getCategories === 'function') {
+            return getCategories();
+        }
+        const raw = JSON.parse(localStorage.getItem('categories')) || [];
+        return Array.isArray(raw) ? raw : [];
+    }
+
     render() {
         const products = JSON.parse(localStorage.getItem(this.STORE_KEY)) || [];
-        
+        const categories = this.getCategories();
+        const selectOptions = categories.length ? categories : [
+            { id: 'cat-gorras', name: 'Gorras' },
+            { id: 'cat-polos', name: 'Polos' },
+            { id: 'cat-camisas-oversize', name: 'Camisas Oversize' },
+            { id: 'cat-buzos', name: 'Buzos' },
+            { id: 'cat-reloj', name: 'Reloj' },
+            { id: 'cat-zapatos', name: 'Zapatos' },
+            { id: 'cat-accesorios', name: 'Accesorios' }
+        ];
+
         this.innerHTML = `
             <style>
-                /* Contenedor Principal en Grid para Máximo Orden */
                 .dashboard-workspace {
                     display: grid;
-                    grid-template-columns: 1.6fr 1fr;
-                    gap: 30px;
-                    align-items: start;
+                    grid-template-columns: 1.7fr 1fr;
+                    gap: 28px;
                     margin-top: 20px;
                 }
-
-                /* Panel Izquierdo: Tabla e Inventario */
-                .inventory-card {
-                    background: #0D0D0F;
-                    border: 1px solid rgba(255, 255, 255, 0.05);
-                    padding: 25px;
-                    border-radius: 4px;
+                .dashboard-panel {
+                    background: #F7EFE5;
+                    border: 1px solid rgba(17, 17, 17, 0.08);
+                    border-radius: 24px;
+                    padding: 28px;
+                    box-shadow: 0 28px 70px rgba(0, 0, 0, 0.08);
                 }
-
-                /* Panel Derecho: Consola de Control Fija */
-                .control-console {
-                    background: #0D0D0F;
-                    border: 1px solid var(--accent, #D4AF37);
-                    padding: 25px;
-                    position: sticky;
-                    top: 100px;
-                    border-radius: 4px;
-                    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+                .inventory-header {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    gap: 12px;
+                    margin-bottom: 22px;
                 }
-
-                .console-title {
-                    font-family: var(--font-urban, sans-serif);
+                .inventory-header h2 {
+                    font-family: var(--font-urban);
+                    font-size: 1.15rem;
+                    letter-spacing: 0.12em;
                     text-transform: uppercase;
-                    letter-spacing: 2px;
-                    font-size: 1rem;
-                    color: #fff;
-                    margin-bottom: 20px;
-                    padding-bottom: 10px;
-                    border-bottom: 1px solid rgba(255,255,255,0.1);
+                    color: #111111;
                 }
-
-                /* Formulario Estilizado en Bloques */
+                .inventory-header span {
+                    color: var(--accent);
+                    font-weight: 700;
+                    letter-spacing: 0.08em;
+                }
+                .inventory-card table {
+                    width: 100%;
+                    border-collapse: collapse;
+                    background: #FFFFFF;
+                    border: 1px solid rgba(17, 17, 17, 0.08);
+                }
+                .inventory-card th,
+                .inventory-card td {
+                    padding: 16px 14px;
+                    border-bottom: 1px solid rgba(17, 17, 17, 0.08);
+                    font-size: 0.95rem;
+                }
+                .inventory-card th {
+                    text-transform: uppercase;
+                    letter-spacing: 0.12em;
+                    color: #706B63;
+                    font-family: var(--font-urban);
+                    font-size: 0.78rem;
+                }
+                .inventory-card tbody tr:last-child td { border-bottom: none; }
+                .prod-thumb {
+                    width: 44px;
+                    height: 44px;
+                    object-fit: cover;
+                    border-radius: 12px;
+                    border: 1px solid rgba(17, 17, 17, 0.08);
+                }
                 .form-group {
                     display: flex;
                     flex-direction: column;
-                    gap: 8px;
-                    margin-bottom: 16px;
+                    gap: 9px;
+                    margin-bottom: 18px;
                 }
-
                 .form-group label {
-                    font-size: 0.75rem;
+                    color: #706B63;
+                    font-size: 0.77rem;
                     text-transform: uppercase;
-                    letter-spacing: 1px;
-                    color: #888;
+                    letter-spacing: 0.11em;
                 }
-
-                /* Fila de miniaturas para la tabla */
-                .prod-thumb {
-                    width: 40px;
-                    height: 40px;
-                    object-fit: cover;
-                    border-radius: 2px;
-                    border: 1px solid rgba(255,255,255,0.1);
+                .control-console {
+                    position: sticky;
+                    top: 110px;
                 }
-
-                .align-middle {
-                    vertical-align: middle;
+                .console-title {
+                    margin-bottom: 24px;
+                    font-family: var(--font-urban);
+                    letter-spacing: 0.12em;
+                    text-transform: uppercase;
+                    color: #111111;
+                    font-size: 1rem;
+                }
+                .input-premium {
+                    background: #FFFFFF;
+                    border: 1px solid rgba(17, 17, 17, 0.12);
+                    border-radius: 12px;
+                    padding: 14px 16px;
+                    color: #111111;
+                }
+                .input-premium:focus {
+                    border-color: rgba(17, 17, 17, 0.3);
+                    outline: none;
+                    box-shadow: 0 0 0 4px rgba(194, 180, 162, 0.12);
+                }
+                .form-actions {
+                    display: flex;
+                    gap: 12px;
+                    margin-top: 18px;
+                    flex-wrap: wrap;
+                }
+                .btn-small {
+                    padding: 12px 18px;
+                    font-size: 0.82rem;
+                }
+                @media(max-width: 1000px) {
+                    .dashboard-workspace { grid-template-columns: 1fr; }
+                    .control-console { position: static; top: auto; }
                 }
             </style>
 
             <div class="dashboard-workspace">
-                
-                <div class="inventory-card">
-                    <div style="display:flex; justify-content:between; align-items:center; margin-bottom:20px;">
-                        <h2 style="font-size:1.1rem; color: #fff; letter-spacing:1px;">CATÁLOGO MAESTRO DE PIEZAS</h2>
-                        <span style="font-size:0.8rem; color:var(--accent); font-weight:600;">${products.length} Artículos</span>
+                <div class="dashboard-panel inventory-card">
+                    <div class="inventory-header">
+                        <h2>Catálogo Maestro de Piezas</h2>
+                        <span>${products.length} Artículos</span>
                     </div>
-
                     <table>
                         <thead>
                             <tr>
                                 <th>Prenda</th>
                                 <th>Código</th>
-                                <th>Precio COP</th>
-                                <th style="text-align: right;">Acciones</th>
+                                <th>Precio</th>
+                                <th>Categoría</th>
+                                <th style="text-align:right;">Acciones</th>
                             </tr>
                         </thead>
                         <tbody>
-                            ${products.map(p => `
+                            ${products.length ? products.map(p => `
                                 <tr>
-                                    <td class="align-middle">
+                                    <td>
                                         <div style="display:flex; align-items:center; gap:12px;">
-                                            <img src="${p.img || 'https://via.placeholder.com/40'}" class="prod-thumb" alt="">
-                                            <span style="font-weight:500;">${p.name || 'Sin nombre'}</span>
+                                            <img src="${p.img || 'https://via.placeholder.com/40'}" class="prod-thumb" alt="${p.name}">
+                                            <span style="font-weight:600; color:#111111;">${p.name || 'Sin nombre'}</span>
                                         </div>
                                     </td>
-                                    <td class="align-middle" style="font-family:monospace; color:#aaa;">${p.code || 'N/A'}</td>
-                                    <td class="align-middle" style="font-weight:600;">$${Number(p.price || 0).toLocaleString()}</td>
-                                    <td class="align-middle" style="text-align: right;">
-                                        <button class="btn-premium btn-edit" data-id="${p.id}" style="padding: 6px 12px; font-size: 0.75rem; background: transparent; color: var(--accent); border-color: rgba(255,255,255,0.1);">Editar</button>
-                                        <button class="btn-danger btn-delete" data-id="${p.id}" style="padding: 6px 12px; font-size: 0.75rem; margin-left:5px;">Eliminar</button>
+                                    <td style="font-family:monospace; color:#706B63;">${p.code || 'N/A'}</td>
+                                    <td style="font-weight:700;">$${Number(p.price || 0).toLocaleString()}</td>
+                                    <td style="color:#4F493F;">${p.category || '-'}</td>
+                                    <td style="text-align:right;">
+                                        <button class="btn-premium btn-edit btn-small" data-id="${p.id}">Editar</button>
+                                        <button class="btn-danger btn-delete btn-small" data-id="${p.id}">Eliminar</button>
                                     </td>
                                 </tr>
-                            `).join('')}
-                            ${products.length === 0 ? '<tr><td colspan="4" style="text-align:center; color:#555; padding:40px 0;">El catálogo operativo está vacío.</td></tr>' : ''}
+                            `).join('') : `<tr><td colspan="5" style="text-align:center; padding:40px 0; color:#706B63;">El catálogo operativo está vacío.</td></tr>`}
                         </tbody>
                     </table>
                 </div>
 
-                <div class="control-console">
+                <div class="dashboard-panel control-console">
                     <h3 id="consoleTitle" class="console-title">Registrar Nueva Pieza</h3>
                     <form id="prodForm">
                         <input type="hidden" id="prodId">
-                        
                         <div class="form-group">
-                            <label>Código Identificador</label>
+                            <label for="prodCode">Código Identificador</label>
                             <input type="text" id="prodCode" class="input-premium" placeholder="Ej: GLZ-WC-01" required>
                         </div>
-
                         <div class="form-group">
-                            <label>Nombre del Artículo</label>
+                            <label for="prodName">Nombre del Artículo</label>
                             <input type="text" id="prodName" class="input-premium" placeholder="Nombre oficial" required>
                         </div>
-
                         <div class="form-group">
-                            <label>Precio Neto (COP)</label>
+                            <label for="prodPrice">Precio Neto (COP)</label>
                             <input type="number" id="prodPrice" class="input-premium" placeholder="Valor numérico" required>
                         </div>
-
                         <div class="form-group">
-                            <label>Enlace de Imagen (URL)</label>
+                            <label for="prodImg">Enlace de Imagen (URL)</label>
                             <input type="url" id="prodImg" class="input-premium" placeholder="https://..." required>
                         </div>
-
                         <div class="form-group">
-                            <label>Descripción de Diseño</label>
-                            <textarea id="prodDesc" class="input-premium" placeholder="Detalles de la prenda..." style="height:70px; resize:none;" required></textarea>
+                            <label for="prodDesc">Descripción de Diseño</label>
+                            <textarea id="prodDesc" class="input-premium" placeholder="Detalles de la prenda..." style="height:90px; resize:none;" required></textarea>
                         </div>
-
                         <div class="form-group">
-                            <label>Categoría del Producto</label>
-                            <select id="prodCategory" class="input-premium" required style="padding: 10px; background: #1a1a1c; color: #fff; border: 1px solid rgba(255,255,255,0.1); border-radius: 4px;">
+                            <label for="prodCategory">Categoría del Producto</label>
+                            <select id="prodCategory" class="input-premium" required>
                                 <option value="">Selecciona categoría...</option>
-                                <option value="Gorras">Gorras</option>
-                                <option value="Polos">Polos</option>
-                                <option value="Camisas Oversize">Camisas Oversize</option>
-                                <option value="Buzos">Buzos</option>
-                                <option value="Reloj">Reloj</option>
-                                <option value="Zapatos">Zapatos</option>
-                                <option value="Accesorios">Accesorios</option>
+                                ${selectOptions.map(cat => `<option value="${cat.name}">${cat.name}</option>`).join('')}
                             </select>
                         </div>
-
-                        <label style="color: #aaa; font-size: 0.8rem; display: flex; align-items: center; gap: 10px; margin: 20px 0; cursor:pointer;">
+                        <label style="display:flex; align-items:center; gap:10px; color:#706B63; font-size:0.9rem; margin-bottom:18px;">
                             <input type="checkbox" id="prodHasSizes" checked style="accent-color: var(--accent);">
                             Habilitar selector de tallaje textil
                         </label>
-
-                        <div style="display:flex; gap:10px; margin-top:20px;">
-                            <button type="button" class="btn-danger" id="clearFormBtn" style="flex:1; display:none;">Limpiar</button>
-                            <button type="submit" class="btn-premium" style="flex:2; width:100%;">Guardar Cambios</button>
+                        <div class="form-actions">
+                            <button type="button" class="btn-danger btn-small" id="clearFormBtn" style="display:none; flex:1;">Limpiar</button>
+                            <button type="submit" class="btn-premium btn-small" style="flex:2;">Guardar Cambios</button>
                         </div>
                     </form>
                 </div>
-
             </div>
         `;
 
@@ -189,18 +235,13 @@ class ProductManager extends HTMLElement {
         const form = this.querySelector('#prodForm');
         const clearBtn = this.querySelector('#clearFormBtn');
 
-        // Escuchar el envío del formulario
         form.addEventListener('submit', (e) => {
             e.preventDefault();
             this.saveProd();
         });
 
-        // Botón de cancelar/limpiar edición
-        clearBtn.addEventListener('click', () => {
-            this.resetConsole();
-        });
+        clearBtn.addEventListener('click', () => this.resetConsole());
 
-        // Mapeo de botones de la lista
         this.querySelectorAll('.btn-edit').forEach(btn => {
             btn.addEventListener('click', (e) => this.loadProdToConsole(e.target.dataset.id));
         });
@@ -223,6 +264,11 @@ class ProductManager extends HTMLElement {
             hasSizes: this.querySelector('#prodHasSizes').checked
         };
 
+        if (!newData.code || !newData.name || !newData.price || !newData.img || !newData.desc || !newData.category) {
+            showToast('Completa todos los campos obligatorios.', true);
+            return;
+        }
+
         let products = JSON.parse(localStorage.getItem(this.STORE_KEY)) || [];
 
         if (id) {
@@ -233,8 +279,8 @@ class ProductManager extends HTMLElement {
 
         localStorage.setItem(this.STORE_KEY, JSON.stringify(products));
         window.dispatchEvent(new CustomEvent('productsUpdated'));
-        
-        if(typeof showToast === 'function') showToast("Catálogo operativo sincronizado");
+        showToast('Catálogo operativo sincronizado.');
+        this.resetConsole();
         this.render();
     }
 
@@ -251,11 +297,8 @@ class ProductManager extends HTMLElement {
         this.querySelector('#prodDesc').value = product.desc;
         this.querySelector('#prodCategory').value = product.category || '';
         this.querySelector('#prodHasSizes').checked = product.hasSizes;
-
         this.querySelector('#consoleTitle').innerText = 'Modificar Especificación';
         this.querySelector('#clearFormBtn').style.display = 'block';
-        
-        // Hacer scroll suave hacia la consola en pantallas pequeñas
         this.querySelector('.control-console').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }
 
@@ -268,15 +311,13 @@ class ProductManager extends HTMLElement {
     }
 
     deleteProd(id) {
-        if (!confirm("¿Retirar esta pieza del inventario activo?")) return;
-        
+        if (!confirm('¿Retirar esta pieza del inventario activo?')) return;
+
         let products = JSON.parse(localStorage.getItem(this.STORE_KEY)) || [];
         products = products.filter(p => p.id !== id);
-        
         localStorage.setItem(this.STORE_KEY, JSON.stringify(products));
         window.dispatchEvent(new CustomEvent('productsUpdated'));
-        
-        if(typeof showToast === 'function') showToast("Pieza dada de baja", true);
+        showToast('Pieza dada de baja', true);
         this.render();
     }
 }

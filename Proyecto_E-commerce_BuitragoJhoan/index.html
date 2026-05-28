@@ -342,16 +342,7 @@
             </div>
         </section>
 
-        <div class="categories-filter">
-            <button class="category-btn active" data-category="Todos">Todos</button>
-            <button class="category-btn" data-category="Gorras">Gorras</button>
-            <button class="category-btn" data-category="Polos">Polos</button>
-            <button class="category-btn" data-category="Camisas Oversize">Camisas Oversize</button>
-            <button class="category-btn" data-category="Buzos">Buzos</button>
-            <button class="category-btn" data-category="Reloj">Reloj</button>
-            <button class="category-btn" data-category="Zapatos">Zapatos</button>
-            <button class="category-btn" data-category="Accesorios">Accesorios</button>
-        </div>
+        <div class="categories-filter" id="categoriesWrapper"></div>
 
         <div id="productGrid" class="product-grid"></div>
     </main>
@@ -367,28 +358,45 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const productGrid = document.getElementById('productGrid');
+            const categoriesWrapper = document.getElementById('categoriesWrapper');
             const searchInput = document.getElementById('productSearch');
             const searchBtn = document.getElementById('searchBtn');
             let currentCategory = 'Todos';
             let currentSearchQuery = '';
 
-            if (!productGrid) return;
+            if (!productGrid || !categoriesWrapper) return;
+
+            const getCategoriesList = () => {
+                const categories = typeof getCategories === 'function' ? getCategories() : JSON.parse(localStorage.getItem('categories')) || [];
+                return [{ name: 'Todos' }, ...categories.map(cat => ({ name: cat.name }))];
+            };
+
+            const renderCategoryButtons = () => {
+                const categories = getCategoriesList();
+                categoriesWrapper.innerHTML = categories.map(cat => `
+                    <button class="category-btn ${cat.name === 'Todos' ? 'active' : ''}" data-category="${cat.name}">${cat.name}</button>
+                `).join('');
+
+                categoriesWrapper.querySelectorAll('.category-btn').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        categoriesWrapper.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+                        btn.classList.add('active');
+                        currentCategory = btn.dataset.category;
+                        renderProducts(searchInput.value, currentCategory);
+                    });
+                });
+            };
 
             const renderProducts = (query = '', category = 'Todos') => {
                 currentSearchQuery = query;
                 currentCategory = category;
-
-                // CORRECCIÓN: Leemos DIRECTAMENTE del localStorage en cada renderizado.
-                const products = JSON.parse(localStorage.getItem('products')) || (typeof defaultProducts !== 'undefined' ? defaultProducts : []);
-
+                const products = JSON.parse(localStorage.getItem('products')) || [];
                 let filtered = products;
 
-                // Filtrar por categoría
                 if (category !== 'Todos') {
                     filtered = filtered.filter(p => p.category === category);
                 }
 
-                // Filtrar por búsqueda
                 const normalized = query.trim().toLowerCase();
                 if (normalized) {
                     filtered = filtered.filter(product => {
@@ -408,18 +416,8 @@
                 `).join('') : `<div class="no-results">No se encontraron prendas que coincidan con tu búsqueda.</div>`;
             };
 
-            // Carga inicial del catálogo
+            renderCategoryButtons();
             renderProducts();
-
-            // Manejador de botones de categoría
-            const categoryButtons = document.querySelectorAll('.category-btn');
-            categoryButtons.forEach(btn => {
-                btn.addEventListener('click', () => {
-                    categoryButtons.forEach(b => b.classList.remove('active'));
-                    btn.classList.add('active');
-                    renderProducts(searchInput.value, btn.dataset.category);
-                });
-            });
 
             searchInput.addEventListener('input', () => renderProducts(searchInput.value, currentCategory));
             searchBtn.addEventListener('click', (e) => {
@@ -440,11 +438,18 @@
             });
 
             window.addEventListener('productsUpdated', () => {
+                renderCategoryButtons();
+                renderProducts(currentSearchQuery, currentCategory);
+            });
+
+            window.addEventListener('categoriesUpdated', () => {
+                renderCategoryButtons();
                 renderProducts(currentSearchQuery, currentCategory);
             });
 
             window.addEventListener('storage', (event) => {
-                if (event.key === 'products' || event.key === null) {
+                if (event.key === 'products' || event.key === 'categories' || event.key === null) {
+                    renderCategoryButtons();
                     renderProducts(currentSearchQuery, currentCategory);
                 }
             });

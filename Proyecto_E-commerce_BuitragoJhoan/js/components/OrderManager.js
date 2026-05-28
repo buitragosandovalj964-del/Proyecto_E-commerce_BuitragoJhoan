@@ -1,5 +1,4 @@
-// SEBXZ EXCLUSIVE - OrderManager.js (Letras Blancas de Alta Visibilidad para el Admin)
-class OrderManager extends HTMLElement {
+﻿class OrderManager extends HTMLElement {
     connectedCallback() {
         this.render();
         window.addEventListener('ordersUpdated', () => this.render());
@@ -12,107 +11,185 @@ class OrderManager extends HTMLElement {
 
     render() {
         const orders = JSON.parse(localStorage.getItem('orders')) || [];
-        orders.sort((a, b) => b.orderId.localeCompare(a.orderId));
+        orders.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
 
         this.innerHTML = `
             <style>
-                /* Estilos de la tabla base del admin */
-                table { width: 100%; border-collapse: collapse; margin-top: 15px; background: #0D0E15; }
-                th, td { padding: 14px; text-align: left; border-bottom: 1px solid rgba(0, 240, 255, 0.15); font-size: 0.9rem; }
-                th { font-family: var(--font-cyber); color: var(--accent); text-transform: uppercase; font-size: 0.8rem; letter-spacing: 1px; }
-                td { color: #FFFFFF; }
-                
-                /* =========================================================
-                   MODAL MANIFIESTO: LETRAS 100% BLANCAS Y LEGIBLES
-                   ========================================================= */
+                .orders-card {
+                    background: #F7EFE5;
+                    border: 1px solid rgba(17, 17, 17, 0.08);
+                    border-radius: 24px;
+                    padding: 28px;
+                    box-shadow: 0 28px 70px rgba(0, 0, 0, 0.08);
+                }
+                .orders-title {
+                    font-family: var(--font-urban);
+                    color: #111111;
+                    letter-spacing: 0.14em;
+                    text-transform: uppercase;
+                    margin-bottom: 18px;
+                    font-size: 1rem;
+                }
+                table {
+                    width: 100%;
+                    border-collapse: collapse;
+                    background: #FFFFFF;
+                    border: 1px solid rgba(17, 17, 17, 0.08);
+                }
+                th, td {
+                    padding: 18px 14px;
+                    border-bottom: 1px solid rgba(17, 17, 17, 0.08);
+                    font-size: 0.95rem;
+                    color: #111111;
+                }
+                th {
+                    text-transform: uppercase;
+                    letter-spacing: 0.1em;
+                    font-family: var(--font-urban);
+                    font-size: 0.78rem;
+                    color: #706B63;
+                }
+                tr:last-child td { border-bottom: none; }
+                .btn-view-order {
+                    padding: 10px 14px;
+                    font-size: 0.78rem;
+                }
                 .manifest-overlay {
-                    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-                    background: rgba(5, 5, 8, 0.85); backdrop-filter: blur(8px);
-                    z-index: 3000; display: none; justify-content: center; align-items: center; padding: 20px;
+                    position: fixed;
+                    inset: 0;
+                    background: rgba(17, 17, 17, 0.55);
+                    display: none;
+                    justify-content: center;
+                    align-items: center;
+                    z-index: 4000;
+                    padding: 20px;
                 }
                 .manifest-card {
-                    background: #0D0D0F; border: 2px solid var(--accent); padding: 35px;
-                    width: 100%; max-width: 550px; display: flex; flex-direction: column; gap: 15px;
-                    box-shadow: var(--cyber-glow-intense);
+                    width: min(620px, 100%);
+                    background: #F7EFE5;
+                    border: 1px solid rgba(17, 17, 17, 0.08);
+                    padding: 30px;
+                    border-radius: 26px;
+                    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.12);
+                    color: #111111;
                 }
                 .manifest-title {
-                    font-family: var(--font-cyber); color: #FFFFFF !important; font-size: 1.1rem;
-                    text-transform: uppercase; letter-spacing: 2px; margin-bottom: 10px;
-                    border-bottom: 1px solid var(--accent); padding-bottom: 12px;
+                    font-family: var(--font-urban);
+                    font-size: 1rem;
+                    color: #111111;
+                    letter-spacing: 0.14em;
+                    text-transform: uppercase;
+                    margin-bottom: 18px;
                 }
-                /* Contenedor del contenido del reporte */
-                #orderDetailsBody p, #orderDetailsBody span, #orderDetailsBody div, #orderDetailsBody strong {
-                    color: #FFFFFF !important; /* Fuerza tipografía blanca sobre el fondo negro */
+                #orderDetailsBody p,
+                #orderDetailsBody span,
+                #orderDetailsBody div,
+                #orderDetailsBody strong {
+                    color: #111111;
                     font-family: var(--font-main);
-                    font-size: 0.9rem;
+                    font-size: 0.95rem;
                 }
                 .manifest-section-title {
-                    font-family: var(--font-cyber) !important;
-                    color: var(--accent) !important;
-                    font-size: 0.8rem !important;
-                    letter-spacing: 1px;
-                    margin-top: 15px;
-                    margin-bottom: 5px;
+                    font-family: var(--font-urban);
+                    color: #111111;
+                    font-size: 0.8rem;
+                    letter-spacing: 0.12em;
+                    margin-top: 18px;
+                    margin-bottom: 8px;
                     text-transform: uppercase;
                 }
                 .item-row {
-                    display: flex; justify-content: space-between; font-size: 0.85rem;
-                    border-bottom: 1px solid rgba(255,255,255,0.05); padding: 6px 0;
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    gap: 16px;
+                    border-bottom: 1px solid rgba(17, 17, 17, 0.08);
+                    padding: 14px 0;
+                    font-size: 0.95rem;
+                    color: #111111;
+                }
+                .item-card {
+                    display: flex;
+                    align-items: center;
+                    gap: 14px;
+                    flex: 1;
+                }
+                .item-image {
+                    width: 72px;
+                    height: 72px;
+                    border-radius: 18px;
+                    object-fit: cover;
+                    border: 1px solid rgba(17, 17, 17, 0.08);
+                    flex-shrink: 0;
+                }
+                .item-meta-wrapper {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 6px;
+                }
+                .item-title {
+                    font-family: var(--font-urban);
+                    font-size: 0.95rem;
+                    color: #111111;
+                }
+                .item-subtitle {
+                    color: #706B63;
+                    font-size: 0.82rem;
                 }
                 .item-row .item-price-spec {
-                    color: var(--accent) !important;
-                    font-weight: 700;
+                    color: var(--accent);
+                    font-weight: 900;
+                    min-width: 120px;
+                    text-align: right;
+                }
+                .close-order-btn {
+                    margin-top: 22px;
+                    width: 100%;
+                }
+                @media(max-width: 680px) {
+                    .item-row { flex-direction: column; align-items: flex-start; }
                 }
             </style>
 
-            <h2 style="font-size:1.2rem; font-family:var(--font-cyber); color:var(--accent); margin-bottom:20px; letter-spacing:1px;">
-                [ HISTORIAL OPERATIVO DE PEDIDOS ]
-            </h2>
-            
-            <table>
-                <thead>
-                    <tr>
-                        <th>ID Pedido</th>
-                        <th>Fecha</th>
-                        <th>Cliente</th>
-                        <th>Destino</th>
-                        <th>Total</th>
-                        <th>Acción</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    ${orders.length === 0 ? `<tr><td colspan="6" style="text-align:center; color:#4b5563;">[ NINGUNA_ORDEN_DETECTADA ]</td></tr>` : 
-                    orders.map(o => `
+            <div class="orders-card">
+                <h2 class="orders-title">[ HISTORIAL OPERATIVO DE PEDIDOS ]</h2>
+                <table>
+                    <thead>
                         <tr>
-                            <td style="font-family:monospace; color:var(--accent); font-weight:700;">${o.orderId}</td>
-                            <td>${o.date}</td>
-                            <td><strong>${o.customer ? o.customer.name : 'No Identificado'}</strong></td>
-                            <td>${o.customer ? o.customer.city : 'General'}</td>
-                            <td style="font-weight:600; color:#FFF;">$${o.total.toLocaleString()} COP</td>
-                            <td>
-                                <button class="btn-premium btn-view-order" data-id="${o.orderId}" style="padding:4px 10px; font-size:0.75rem;">Inspeccionar</button>
-                            </td>
+                            <th>ID Pedido</th>
+                            <th>Fecha</th>
+                            <th>Cliente</th>
+                            <th>Destino</th>
+                            <th>Total</th>
+                            <th>Acción</th>
                         </tr>
-                    `).join('')}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        ${orders.length === 0 ? `<tr><td colspan="6" style="text-align:center; color:#706B63; padding:36px 0;">[ NINGUNA_ORDEN_DETECTADA ]</td></tr>` : orders.map(o => `
+                            <tr>
+                                <td style="font-family:monospace; color: var(--accent); font-weight:700;">${o.orderId}</td>
+                                <td>${o.date}</td>
+                                <td><strong>${o.customer ? o.customer.name : 'No identificado'}</strong></td>
+                                <td>${o.customer ? o.customer.city : 'General'}</td>
+                                <td style="font-weight:700; color:#111111;">$${o.total.toLocaleString()} COP</td>
+                                <td><button class="btn-premium btn-view-order" data-id="${o.orderId}">Inspeccionar</button></td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            </div>
 
             <div class="manifest-overlay" id="orderDetailModal">
                 <div class="manifest-card">
                     <div class="manifest-title">[ MANIFIESTO DE DESPACHO ]</div>
-                    
-                    <div id="orderDetailsBody" style="display:flex; flex-direction:column; gap:8px;">
-                        </div>
-
-                    <button class="btn-premium" id="closeOrderModal" style="margin-top:20px; width:100%;">Cerrar Manifiesto</button>
+                    <div id="orderDetailsBody" style="display:flex; flex-direction:column; gap:12px;"></div>
+                    <button class="btn-premium close-order-btn" id="closeOrderModal">Cerrar Manifiesto</button>
                 </div>
             </div>
         `;
 
         this.querySelectorAll('.btn-view-order').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                this.viewOrderDetails(e.target.getAttribute('data-id'));
-            });
+            btn.addEventListener('click', (e) => this.viewOrderDetails(e.target.dataset.id));
         });
 
         this.querySelector('#closeOrderModal').addEventListener('click', () => {
@@ -127,10 +204,9 @@ class OrderManager extends HTMLElement {
 
         const body = this.querySelector('#orderDetailsBody');
         body.innerHTML = `
-            <p><strong>Código Único de Rastreo:</strong> <span style="font-family:monospace; color:var(--accent) !important; font-weight:700;">${order.orderId}</span></p>
+            <p><strong>Código Único de Rastreo:</strong> <span style="font-family:monospace; color:var(--accent); font-weight:700;">${order.orderId}</span></p>
             <p><strong>Fecha de Solicitud:</strong> ${order.date}</p>
-            <p><strong>Estado del Despacho:</strong> <span style="background:rgba(0,240,255,0.1); color:var(--accent) !important; padding:2px 8px; font-size:0.75rem; font-weight:700;">${order.status || 'Pendiente'}</span></p>
-            
+            <p><strong>Estado del Despacho:</strong> <span style="background: rgba(194, 180, 162, 0.18); color: #111111; padding: 4px 10px; font-size: 0.82rem; font-weight:700; border-radius: 8px;">${order.status || 'Pendiente'}</span></p>
             <div class="manifest-section-title">Cliente Destinatario</div>
             <p><strong>Nombre:</strong> ${order.customer.name}</p>
             <p><strong>Identificación:</strong> ${order.customer.document || 'No registrado'}</p>
@@ -138,19 +214,23 @@ class OrderManager extends HTMLElement {
             <p><strong>Contacto Directo:</strong> ${order.customer.phone}</p>
             <p><strong>Destino:</strong> ${order.customer.city}</p>
             <p><strong>Dirección Postal:</strong> ${order.customer.address}</p>
-
             <div class="manifest-section-title">Piezas Adquiridas</div>
-            <div style="max-height:160px; overflow-y:auto; background:rgba(0,0,0,0.4); padding:12px; border:1px solid rgba(0,240,255,0.15);">
+            <div style="max-height:260px; overflow-y:auto; background: #FFFFFF; padding:16px; border:1px solid rgba(17,17,17,0.08); border-radius:16px;">
                 ${order.items.map(i => `
                     <div class="item-row">
-                        <span>${i.name} <strong>(x${i.quantity})</strong> <small style="color:var(--accent) !important;">[Talla: ${i.size || 'Única'}]</small></span>
+                        <div class="item-card">
+                            <img class="item-image" src="${i.img}" alt="${i.name}">
+                            <div class="item-meta-wrapper">
+                                <div class="item-title">${i.name} <strong>(x${i.quantity})</strong></div>
+                                <div class="item-subtitle">Talla: ${i.size || 'Única'}</div>
+                            </div>
+                        </div>
                         <span class="item-price-spec">$${(i.price * i.quantity).toLocaleString()} COP</span>
                     </div>
                 `).join('')}
             </div>
-
-            <div style="text-align:right; margin-top:15px; font-size:1.05rem; font-weight:900; border-top:1px solid rgba(0,240,255,0.3); padding-top:12px; color:#FFFFFF !important;">
-                TOTAL CONSOLIDADO: <span style="color:var(--accent) !important;">$${order.total.toLocaleString()} COP</span>
+            <div style="text-align:right; margin-top:18px; font-size:1rem; font-weight:800; color:#111111; border-top:1px solid rgba(17,17,17,0.08); padding-top:16px;">
+                TOTAL CONSOLIDADO: <span style="color:var(--accent);">$${order.total.toLocaleString()} COP</span>
             </div>
         `;
 

@@ -13,6 +13,8 @@
     /* Tipografías Urbanas */
     --font-urban: 'Syne', sans-serif;       /* Pesada, tosca, de bloque callejero */
     --font-main: 'Space Grotesk', sans-serif; /* Estructural y limpia */
+    --font-cyber: 'Syne', sans-serif;
+    --font-luxury: 'Playfair Display', serif;
 }
 
 * {

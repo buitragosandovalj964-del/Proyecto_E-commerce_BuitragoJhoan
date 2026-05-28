@@ -1,59 +1,174 @@
-class ProductDetailModal extends HTMLElement {
+﻿class ProductDetailModal extends HTMLElement {
     constructor() {
         super();
         this.selectedSize = 'Única';
         this.innerHTML = `
             <style>
                 .modal-overlay {
-                    position: fixed; top:0; left:0; width:100%; height:100%;
-                    background: rgba(0,0,0,0.85); backdrop-filter: blur(15px);
-                    display: none; justify-content: center; align-items: center; z-index: 2000;
+                    position: fixed;
+                    inset: 0;
+                    background: rgba(17, 17, 17, 0.55);
+                    backdrop-filter: blur(14px);
+                    display: none;
+                    justify-content: center;
+                    align-items: center;
+                    z-index: 2200;
+                    padding: 20px;
                 }
+
                 .modal-content {
-                    background: #111; border: 1px solid var(--accent);
-                    width: 80%; max-width: 900px; display: flex; position: relative;
+                    width: min(980px, 100%);
+                    background: #F7EFE5;
+                    border: 1px solid rgba(17, 17, 17, 0.08);
+                    border-radius: 28px;
+                    display: grid;
+                    grid-template-columns: 1fr 1fr;
+                    overflow: hidden;
+                    box-shadow: 0 35px 90px rgba(0, 0, 0, 0.16);
+                    min-height: 420px;
                 }
+
                 .modal-close {
-                    position: absolute; top: 15px; right: 20px; font-size: 1.8rem;
-                    cursor: pointer; color: var(--accent);
-                }
-                .modal-img { width: 50%; height: 500px; object-fit: cover; }
-                .modal-info { width: 50%; padding: 40px; display: flex; flex-direction: column; justify-content: center; }
-                .modal-info h2 { font-family: var(--font-luxury); font-size: 2rem; margin-bottom: 15px; }
-                .modal-info p { color: var(--text-muted); line-height: 1.6; margin-bottom: 25px; font-size: 0.95rem; }
-                .modal-info .price { font-size: 1.5rem; color: var(--accent); font-weight: bold; margin-bottom: 20px; font-family: monospace; }
-                .detail-size-selector { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
-                .detail-size-btn {
-                    border: 1px solid var(--border-color);
-                    background: #fff;
-                    color: var(--text-main);
-                    padding: 8px 14px;
-                    font-family: var(--font-urban);
+                    position: absolute;
+                    right: 28px;
+                    top: 24px;
+                    font-size: 1.8rem;
+                    color: #111111;
                     cursor: pointer;
+                    z-index: 10;
                 }
+
+                .modal-img {
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                    aspect-ratio: 4 / 5;
+                }
+
+                .modal-info {
+                    padding: 40px;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: space-between;
+                    color: #111111;
+                }
+
+                .modal-info h2 {
+                    font-family: var(--font-urban);
+                    font-size: clamp(2rem, 2.4vw, 2.8rem);
+                    letter-spacing: 0.1em;
+                    text-transform: uppercase;
+                    margin-bottom: 14px;
+                }
+
+                .modal-info .product-code {
+                    font-family: var(--font-main);
+                    font-size: 0.82rem;
+                    letter-spacing: 0.14em;
+                    text-transform: uppercase;
+                    color: #706B63;
+                    margin-bottom: 18px;
+                }
+
+                .modal-info .price {
+                    font-family: var(--font-urban);
+                    font-size: 2rem;
+                    color: #111111;
+                    font-weight: 900;
+                    margin-bottom: 18px;
+                }
+
+                .modal-info p {
+                    color: #3f3a33;
+                    line-height: 1.75;
+                    font-size: 0.98rem;
+                    margin-bottom: 26px;
+                }
+
+                .detail-size-selector {
+                    display: flex;
+                    flex-wrap: wrap;
+                    gap: 10px;
+                    margin-bottom: 26px;
+                }
+
+                .detail-size-btn {
+                    min-width: 56px;
+                    padding: 12px 16px;
+                    border: 1px solid rgba(17, 17, 17, 0.16);
+                    background: #FFFFFF;
+                    color: #111111;
+                    font-family: var(--font-urban);
+                    font-size: 0.85rem;
+                    letter-spacing: 0.1em;
+                    text-transform: uppercase;
+                    cursor: pointer;
+                    transition: all 0.25s ease;
+                }
+
                 .detail-size-btn.active {
-                    background: var(--accent);
-                    color: #fff;
-                    border-color: var(--accent);
+                    background: #111111;
+                    color: #F7EFE5;
+                    border-color: #111111;
                 }
-                @media(max-width: 768px) {
-                    .modal-content { flex-direction: column; }
-                    .modal-img { width:100%; height:300px; }
-                    .modal-info { width:100%; padding:20px; }
+
+                .detail-actions {
+                    display: flex;
+                    gap: 14px;
+                    flex-wrap: wrap;
+                }
+
+                .detail-actions button {
+                    flex: 1;
+                    min-width: 160px;
+                }
+
+                .secondary-btn {
+                    background: transparent;
+                    color: #111111;
+                    border: 1px solid rgba(17, 17, 17, 0.16);
+                }
+
+                .primary-btn {
+                    background: #111111;
+                    color: #F7EFE5;
+                }
+
+                @media(max-width: 900px) {
+                    .modal-content {
+                        grid-template-columns: 1fr;
+                    }
+                }
+
+                @media(max-width: 620px) {
+                    .modal-info {
+                        padding: 24px;
+                    }
+
+                    .modal-close {
+                        right: 18px;
+                        top: 18px;
+                    }
                 }
             </style>
+
             <div class="modal-overlay" id="detailOverlay">
                 <div class="modal-content">
                     <span class="modal-close" id="closeDetail">&times;</span>
                     <img class="modal-img" id="detailImg" src="" alt="">
                     <div class="modal-info">
-                        <h2 id="detailTitle"></h2>
-                        <p id="detailDesc"></p>
-                        <div class="price" id="detailPrice"></div>
-                        <div id="detailSizeSelector" class="detail-size-selector"></div>
-                        <div style="display:flex; gap:10px; flex-wrap: wrap; align-items:center;">
-                            <button class="btn-premium" id="backBtn" type="button">Volver</button>
-                            <button class="btn-premium" id="addCartFromDetail" type="button" style="background: var(--accent); color:#000;">Añadir al Carrito</button>
+                        <div>
+                            <div class="product-code" id="detailCode"></div>
+                            <h2 id="detailTitle"></h2>
+                            <div class="price" id="detailPrice"></div>
+                            <p id="detailDesc"></p>
+                        </div>
+                        <div>
+                            <div class="detail-size-selector" id="detailSizeSelector"></div>
+                            <div class="detail-actions">
+                                <button class="btn-premium secondary-btn" id="backBtn" type="button">Volver</button>
+                                <button class="btn-premium primary-btn" id="addCartFromDetail" type="button">Añadir al Carrito</button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -70,6 +185,7 @@ class ProductDetailModal extends HTMLElement {
 
         this.addEventListener('click', (event) => {
             const target = event.target;
+
             if (target.classList.contains('detail-size-btn')) {
                 this.detailSizeSelector.querySelectorAll('.detail-size-btn').forEach(btn => btn.classList.remove('active'));
                 target.classList.add('active');
@@ -94,6 +210,7 @@ class ProductDetailModal extends HTMLElement {
         this.querySelector('#detailImg').src = this.currentProd.img;
         this.querySelector('#detailImg').alt = this.currentProd.name;
         this.querySelector('#detailTitle').innerText = this.currentProd.name;
+        this.querySelector('#detailCode').innerText = this.currentProd.code;
         this.querySelector('#detailDesc').innerText = this.currentProd.desc;
         this.querySelector('#detailPrice').innerText = `$${Number(this.currentProd.price).toLocaleString()} COP`;
 
@@ -124,4 +241,5 @@ class ProductDetailModal extends HTMLElement {
         }
     }
 }
+
 customElements.define('product-detail-modal', ProductDetailModal);
